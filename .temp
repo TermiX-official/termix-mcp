@@ -1,0 +1,26 @@
+
+    "bsc-mcp": {
+      "command": "node",
+      "args": [
+        "E:\\work\\bsc-mcp\\build\\index.js"
+      ],
+      "env": {
+        "BSC_WALLET_PRIVATE_KEY": "JDJiJDEyJEQxMElURjcuZGlVQ3F1amc1MHd1TmXxxcDoecbiZBfVW6kBJ9/MVOvRRKCqSlOmC51Jf6syTMi7eZonGTKU6F3Dy1Qc7wgrRVrypJ9Yo5W1ho/U3EMHIK0XH1D43S/GinfwBY5bsNZxVvIVFzpR5ms1JTgX",
+        "BSC_WALLET_ADDRESS": "0x4fB88bA1f86D4C59322cc24B5BF3ae3C4568479E",
+        "BSC_RPC_URL": "https://lb.drpc.org/ogrpc?network=bsc&dkey=Ao9tYeMI2UJyk_Um7qodIOqxc4Y5BIgR8Iv2ssvAG40d"
+      },
+      "disabled": false,
+      "autoApprove": []
+    },
+    "binance-mcp": {
+      "command": "node",
+      "args": [
+        "E:\\work\\binance-mcp-private\\build\\index.js"
+      ],
+      "env": {
+        "BINANCE_API_KEY": "LZD6i0bWnZC96zt88ia5q4jL9UgmiYsVFQQfZEysY0Kj9kOvawZ9ppCADCq7RYdD",
+        "BINANCE_API_SECRET": "cRwMuiCmNxelbuZlJsdf6oeXwTtsqaImVGIBUYbRxFTerGESpeAKail11Ng7Daim"
+      },
+      "disabled": false,
+      "autoApprove": []
+    },
