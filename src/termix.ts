@@ -55,13 +55,20 @@ export class Termix {
             throw new Error("Termix token not set");
         }
         const mcpList = await this.getMcpList();
+        logger({mcpList})
 
         const termixToken = this.termixToken;
         for (const mcp of mcpList) {
             const mcpClient = new McpClient(mcp.url, termixToken);
-            await mcpClient.connect();
-            const tools = await mcpClient.tools();
-            await mcpClient.disconnect();
+            let tools;
+            try {
+                await mcpClient.connect();
+                tools = await mcpClient.tools();
+                await mcpClient.disconnect();
+            } catch (e) {
+                logger(`Failed to connect to MCP ${mcp.name}`);
+                continue;
+            }
             
             for (const tool of tools) {
                 

@@ -66,7 +66,7 @@ export class McpClient {
                 method: "tools/call",
                 params: {
                     name: toolName,
-                    arguments: !!params ? JSON.parse(params) : {},
+                    arguments: !!params ? params : {},
                 },
             },
             CallToolResultSchema
