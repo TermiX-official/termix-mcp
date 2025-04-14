@@ -39,6 +39,9 @@ export class Termix {
             throw new Error("Failed to login to Termix");
         }
         const tokenRespJson = await tokenResp.json();
+        if (!tokenRespJson.success) {
+            throw new Error("Failed to login to Termix");
+        }
         this.termixToken = tokenRespJson.data;
     }
 
