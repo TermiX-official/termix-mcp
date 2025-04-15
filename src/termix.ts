@@ -13,6 +13,10 @@ export class Termix {
     apiKey: string;
     apiSecret: string;
     termixToken: string | undefined;
+    mcpTokens: {
+        token: string;
+        name: string;
+    }[] = [];
     termixUrl: string | undefined;
 
 
@@ -24,7 +28,7 @@ export class Termix {
     }
 
     async login() {
-        const tokenResp = await fetch(this.termixUrl + "/api/apikey/check", {
+        const tokenResp = await fetch(this.termixUrl + "/api/termixMcp/check", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -42,27 +46,35 @@ export class Termix {
         if (!tokenRespJson.success) {
             throw new Error("Failed to login to Termix");
         }
-        this.termixToken = tokenRespJson.data;
+        this.termixToken = tokenRespJson.data.termixServerToken;
+        this.mcpTokens = tokenRespJson.data.mcpServerTokens;
     }
 
     private async getMcpList() {
-        const url = this.termixUrl + "/api/mcp/list";
-        const response = await fetch(url);
+        const url = this.termixUrl + "/api/termixMcp/list";
+        const response = await fetch(url, {
+            
+            headers: {
+                "Content-Type": "application/json",
+                "authorization": `Bearer ${this.termixToken}`
+            },
+        });
         const mcpListResult = await response.json();
         const mcpList = mcpListResult.data;
         return mcpList as Mcp[]
     }
 
     async build(server: McpServer) {
-        if (!this.termixToken) {
-            throw new Error("Termix token not set");
-        }
         const mcpList = await this.getMcpList();
         logger({mcpList})
 
-        const termixToken = this.termixToken;
         for (const mcp of mcpList) {
-            const mcpClient = new McpClient(mcp.url, termixToken);
+            const mcpToken = this.mcpTokens.find(item => item.name === mcp.name);
+            if (!mcpToken) {
+                logger(`Failed to find MCP token for ${mcp.name}`);
+                continue;
+            }
+            const mcpClient = new McpClient(mcp.url, mcpToken.token);
             let tools;
             try {
                 await mcpClient.connect();
@@ -79,7 +91,7 @@ export class Termix {
                 if (!properties) {
                     server.tool(`${mcp.name}_${tool.name}`, tool.description || "", async () => {
                         
-                        const mcpClient = new McpClient(mcp.url, termixToken);
+                        const mcpClient = new McpClient(mcp.url, mcpToken.token);
                         await mcpClient.connect();
                         const result = await mcpClient.callTool(tool.name);
                         await mcpClient.disconnect();
@@ -89,7 +101,7 @@ export class Termix {
                     const paramsSchema = jsonSchemaToZod(properties)
                     
                     server.tool(`${mcp.name}_${tool.name}`, tool.description || "", paramsSchema, async (params: any) => {
-                        const mcpClient = new McpClient(mcp.url, termixToken);
+                        const mcpClient = new McpClient(mcp.url, mcpToken.token);
                         await mcpClient.connect();
                         const result = await mcpClient.callTool(tool.name, params);
                         await mcpClient.disconnect();

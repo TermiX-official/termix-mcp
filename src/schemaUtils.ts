@@ -6,13 +6,13 @@ export function jsonSchemaToZod(properties: any) {
     Object.entries(properties).forEach(([key, value]: [string, any]) => {
       switch (value.type) {
         case 'string':
-          zodSchema[key] = z.string().optional();
+          zodSchema[key] = z.string().optional().describe(value.description);;
           break;
         case 'number':
-          zodSchema[key] = z.number().optional();
+          zodSchema[key] = z.number().optional().describe(value.description);;
           break;
         case 'boolean':
-          zodSchema[key] = z.boolean().optional();
+          zodSchema[key] = z.boolean().optional().describe(value.description);;
           break;
         case 'object':
           zodSchema[key] = z.object(jsonSchemaToZod(value)).optional();
@@ -21,7 +21,7 @@ export function jsonSchemaToZod(properties: any) {
           zodSchema[key] = z.array(z.object(jsonSchemaToZod(value.items))).optional();
           break;
         default:
-          zodSchema[key] = z.any().optional();
+          zodSchema[key] = z.any().optional().describe(value.description);;
       }
     });
     
