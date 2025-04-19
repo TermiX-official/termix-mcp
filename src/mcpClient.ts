@@ -7,7 +7,7 @@ export class McpClient {
     client: Client;
 
     constructor(seeUrl: string, jwtToken: string) {
-        
+
         this.clientTransport = new SSEClientTransport(new URL(seeUrl), {
             authProvider: {
                 tokens() {
@@ -16,7 +16,7 @@ export class McpClient {
                         token_type: "Bearer"
                     };
                 },
-    
+
                 get redirectUrl() { return ""; },
                 get clientMetadata() { return { redirect_uris: [""] }; },
                 clientInformation: () => undefined,
@@ -26,7 +26,7 @@ export class McpClient {
                 codeVerifier: () => { return "" },
             },
         });
-    
+
         this.client = new Client(
             {
                 name: "mcp-typescript test client",
@@ -40,16 +40,16 @@ export class McpClient {
         );
     }
 
-    async connect () {
+    async connect() {
         await this.client.connect(this.clientTransport);
     }
 
-    async disconnect () {
+    async disconnect() {
         await this.client.close();
     }
 
-    async tools () {
-        
+    async tools() {
+
         const toolsResult = await this.client.request(
             {
                 method: "tools/list",
@@ -60,16 +60,19 @@ export class McpClient {
         return toolsResult.tools;
     }
 
-    async callTool (toolName: string, params?: any) {
+    async callTool(toolName: string, params?: any) {
         const testResult = await this.client.request(
             {
                 method: "tools/call",
                 params: {
                     name: toolName,
                     arguments: !!params ? params : {},
-                },
+                }
             },
-            CallToolResultSchema
+            CallToolResultSchema,
+            {
+                timeout: 1000 * 60 * 3,
+            }
         );
         return testResult;
     }
