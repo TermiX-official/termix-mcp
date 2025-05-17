@@ -18,7 +18,7 @@ if (!apiSecret) {
 const termix = new Termix(apiKey, apiSecret)
 export async function main() {
     const server = new McpServer({
-        name: "bsc-mcp",
+        name: "TermiX-mcp",
         version: "1.0.0"
     });
 

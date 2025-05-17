@@ -25,7 +25,7 @@ export class Termix {
         this.apiSecret = apiSecret;
 
         // this.termixUrl = process.env.TERMIX_URL || "http://localhost:3030";
-        this.termixUrl = process.env.TERMIX_URL || "https://termix-server-backend-467866309844.asia-southeast2.run.app";
+        this.termixUrl = process.env.TERMIX_URL || "https://termix-server-backend-1038559126940.asia-southeast1.run.app";
     }
 
     async login() {
